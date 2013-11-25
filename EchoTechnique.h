@@ -20,9 +20,11 @@ public:
 private:
 
     QVector<QVector3D> Vertices;
-
+    QTime Timer;
     QOpenGLShaderProgram Program;
     int VertexAttr;
+    int Resolution;
+    int Time;
 };
 
 #endif // ECHO_TECHNIQUE_H

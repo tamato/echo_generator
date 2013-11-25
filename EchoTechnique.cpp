@@ -18,6 +18,10 @@ void EchoTechnique::render()
     glDisable(GL_DEPTH_TEST);
 
     Program.bind();
+
+    Program.setUniformValue(Resolution, QVector2D(512,512));
+    Program.setUniformValue(Time, Timer.elapsed()*0.001f);
+
     Program.enableAttributeArray(VertexAttr);
     Program.setAttributeArray(VertexAttr, Vertices.constData());
     glDrawArrays(GL_TRIANGLE_FAN, 0, Vertices.size());
@@ -28,6 +32,7 @@ void EchoTechnique::render()
 
 void EchoTechnique::initialize()
 {
+    Timer.start();
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &Program);
     const char *vsrc1 =
         "attribute highp vec4 vertex;\n"
@@ -39,9 +44,12 @@ void EchoTechnique::initialize()
 
     QOpenGLShader *fshader1 = new QOpenGLShader(QOpenGLShader::Fragment, &Program);
     const char *fsrc1 =
+        "uniform lowp vec2 resolution;\n"
+        "uniform lowp float time;\n"
         "void main(void)\n"
         "{\n"
-        "    gl_FragColor = vec4(1,0,0,1);\n"
+        "    vec2 uv = gl_FragCoord.xy/resolution.xy;\n"
+        "    gl_FragColor = vec4(uv, sin(time)*.5+.5,1);\n"
         "}\n";
     fshader1->compileSourceCode(fsrc1);
 
@@ -50,6 +58,8 @@ void EchoTechnique::initialize()
     Program.link();
 
     VertexAttr = Program.attributeLocation("vertex");
+    Resolution = Program.uniformLocation("resolution");
+    Time = Program.uniformLocation("time");
 
     Vertices.clear();
     Vertices << QVector3D(-1,-1,0);
