@@ -29,7 +29,7 @@ QSGNode *ScreenShot::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
     // when geometry changes.
     if (oldNode)
         delete oldNode;
-    TextureNode *node = new TextureNode(window());
+    TextureNode *node = new TextureNode(window(), this);
     node->setRect(boundingRect());
     return node;
 }

@@ -14,7 +14,7 @@ class TextureNode : public QObject, public QSGSimpleTextureNode
     Q_OBJECT
 
 public:
-    TextureNode(QQuickWindow *window);
+    TextureNode(QQuickWindow *window, QQuickItem *parent);
     ~TextureNode();
 
 public slots:
@@ -25,6 +25,7 @@ private:
     QSGTexture *m_texture;
     QQuickWindow *m_window;
     EchoTechnique *echo;
+    QQuickItem *Parent;
 };
 
 #endif // TEXTURENODE_H

@@ -60,7 +60,7 @@ void EchoTechnique::initialize()
     // gatheter all uniforms
     QRegExp regexp;
     regexp.setPatternSyntax(QRegExp::RegExp2);
-    regexp.setPattern("^uniform [a-zA-Z0-9 ]+([a-zA-Z0-9_]*);");
+    regexp.setPattern("^uniform [a-zA-Z0-9 ]+ ([a-zA-Z0-9_]*);");
     QFile file( "echo.frag" );
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&file);

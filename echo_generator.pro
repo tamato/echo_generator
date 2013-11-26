@@ -30,4 +30,5 @@ HEADERS += \
     texturenode.h
 
 OTHER_FILES += \
-    qml/echo_generator/echo_main.qml
+    qml/echo_generator/echo_main.qml \
+    echo.frag

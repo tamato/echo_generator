@@ -33,7 +33,7 @@ Rectangle {
         }
     }
 
-    ScreenCapture {
+    ScreenCapture {        
         id: echo_rect
         width : parent.echo_size
         height: parent.echo_size
@@ -41,5 +41,6 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: parent.left
+        property variant test: "hello world!"
     }
 }

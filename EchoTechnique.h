@@ -4,14 +4,15 @@
 #include <QtGui/qvector3d.h>
 #include <QtGui/qmatrix4x4.h>
 #include <QtGui/qopenglshaderprogram.h>
-
+#include <QtQuick/QQuickItem>
 #include <QTime>
 #include <QVector>
+#include <QMap>
 
 class EchoTechnique
 {
 public:
-    EchoTechnique();
+    EchoTechnique(QQuickItem *parentItem);
     ~EchoTechnique();
 
     void render();
@@ -23,8 +24,9 @@ private:
     QTime Timer;
     QOpenGLShaderProgram Program;
     int VertexAttr;
-    int Resolution;
-    int Time;
+
+    QMap<QString, int> Uniforms;
+    QQuickItem *ParentItem;
 };
 
 #endif // ECHO_TECHNIQUE_H

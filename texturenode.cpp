@@ -1,11 +1,12 @@
 #include "texturenode.h"
 #include <QDebug>
 
-TextureNode::TextureNode(QQuickWindow *window)
+TextureNode::TextureNode(QQuickWindow *window, QQuickItem *parent)
     : m_fbo(0)
     , m_texture(0)
     , m_window(window)
     , echo(0)
+    , Parent(parent)
 {
     // Connect the beforeRendering signal to our paint function.
     // Since this call is executed on the rendering thread it must be
@@ -30,7 +31,7 @@ void TextureNode::renderFBO()
         m_fbo = new QOpenGLFramebufferObject(size, format);
 
         m_texture = m_window->createTextureFromId(m_fbo->texture(), size);
-        echo = new EchoTechnique();
+        echo = new EchoTechnique(Parent);
         echo->initialize();
         setTexture(m_texture);
     }
@@ -42,4 +43,6 @@ void TextureNode::renderFBO()
 
     m_fbo->bindDefault();
     m_window->update();
+
+    m_fbo->toImage().save("test_10.png");
 }
