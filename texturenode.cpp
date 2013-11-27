@@ -44,5 +44,5 @@ void TextureNode::renderFBO()
     m_fbo->bindDefault();
     m_window->update();
 
-    m_fbo->toImage().save("test_10.png");
+    //m_fbo->toImage().save("test_10.png");
 }

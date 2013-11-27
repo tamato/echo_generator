@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QQmlProperty>
+#include <QColor>
 
 EchoTechnique::EchoTechnique(QQuickItem *parentItem)
     : ParentItem(parentItem)
@@ -27,7 +28,28 @@ void EchoTechnique::render()
     QMap<QString, int>::const_iterator itr = Uniforms.constBegin();
     for (;itr != Uniforms.constEnd(); ++itr) {
         QQmlProperty prop(ParentItem, itr.key());
-        //Program.setUniformValue(itr.value(), prop.read());
+        QVariant var = prop.read();
+        QVariant::Type type = var.type();
+        switch(type)
+        {
+        case QMetaType::QSizeF:
+            Program.setUniformValue(itr.value(), var.toSize());
+            break;
+        case QMetaType::Double:
+            Program.setUniformValue(itr.value(), var.toFloat());
+            break;
+        case QMetaType::QColor:
+            Program.setUniformValue(itr.value(), var.value<QColor>());
+            break;
+//        case QMetaType::QRect:
+//            Program.setUniformValue(itr.value(), var.to
+//            break;
+//        case QMetaType::QRectF:
+//            Program.setUniformValue(itr.value(), var.toRectF());
+//            break;
+        default:
+            qWarning() << "Unrecongized property type < " << type << " > attempted to passed to shader";
+        }
     }
 
     Program.enableAttributeArray(VertexAttr);
@@ -60,7 +82,7 @@ void EchoTechnique::initialize()
     // gatheter all uniforms
     QRegExp regexp;
     regexp.setPatternSyntax(QRegExp::RegExp2);
-    regexp.setPattern("^uniform [a-zA-Z0-9 ]+([a-zA-Z0-9_]*);");
+    regexp.setPattern("^ *uniform [a-zA-Z0-9 ]+ ([a-zA-Z0-9_]*);");
     QFile file( "echo.frag" );
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&file);
@@ -71,12 +93,8 @@ void EchoTechnique::initialize()
             Uniforms[uniform_name] = Program.uniformLocation(uniform_name);
         }
     }
-    qDebug() << Uniforms;
 
     VertexAttr = Program.attributeLocation("vertex");
-    int r = Program.uniformLocation("resolution");
-    qDebug() << r;
-//    Time = Program.uniformLocation("time");
 
     Vertices.clear();
     Vertices << QVector3D(-1,-1,0);
@@ -84,44 +102,3 @@ void EchoTechnique::initialize()
     Vertices << QVector3D( 1, 1,0);
     Vertices << QVector3D(-1, 1,0);
 }
-/*
- *    ScreenCapture {
-        id: echo_rect
-        width : parent.echo_size
-        height: parent.echo_size
-        anchors.right: controls_rect.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-
-        property real elapsed_time: 0
-
-        Timer {
-            interval: 10
-            running: true
-            repeat: true
-            onTriggered: parent.elapsed_time += interval * 0.001
-        }
-
-        ShaderEffect {
-            id: echo
-            anchors.fill: parent
-            property variant resolution: Qt.size(width,height)
-            property real time: parent.elapsed_time
-
-            property variant center_offset: Qt.size(0.0,0.0)
-            property real darkness: 0.2
-            property real animation_mod: 1.0
-            property real animation_from_center_mod: 1.0/8.0
-            property real contrast_str: 5.0
-            property real object_density: 24.0
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log("saving img")
-                    //screen.capture("test_img4.png")
-                }
-            }
-        }
-*/

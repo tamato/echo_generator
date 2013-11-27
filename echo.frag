@@ -1,7 +1,7 @@
 
-uniform highp float time;
-uniform mediump vec2 resolution;
-uniform lowp vec2 center_offset;
+uniform float time;
+uniform vec2 resolution;
+uniform vec2 center_offset;
 
 uniform float darkness;                 // was 0.2
 uniform float animation_mod;                // 1.
