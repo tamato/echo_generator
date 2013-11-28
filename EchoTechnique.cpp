@@ -16,6 +16,17 @@ EchoTechnique::~EchoTechnique()
 {
 }
 
+/*
+ *http://qt-project.org/doc/qt-5.0/qtquick/qml-qtquick2-shadereffect.html
+bool, int, qreal -> bool, int, float - If the type in the shader is not the same as in QML, the value is converted automatically.
+QColor -> vec4 - When colors are passed to the shader, they are first premultiplied. Thus Qt.rgba(0.2, 0.6, 1.0, 0.5) becomes vec4(0.1, 0.3, 0.5, 0.5) in the shader, for example.
+QRect, QRectF -> vec4 - Qt.rect(x, y, w, h) becomes vec4(x, y, w, h) in the shader.
+QPoint, QPointF, QSize, QSizeF -> vec2
+QVector3D -> vec3
+QTransform -> mat4
+Image, ShaderEffectSource -> sampler2D - Origin is in the top-left corner, and the color values are premultiplied.
+*/
+
 void EchoTechnique::render()
 {
     glClearColor(0,0,0,0);
@@ -39,6 +50,11 @@ void EchoTechnique::render()
             Program.setUniformValue(itr.value(), var.toFloat());
             break;
         case QMetaType::QColor:
+            /* from : http://qt-project.org/doc/qt-5.0/qtcore/qvariant.html
+             * A Note on GUI Types
+             * For there are no functions for QColor, QImage, QPixmap
+             * Therefor the variant must be casted to the desired type.
+             */
             Program.setUniformValue(itr.value(), var.value<QColor>());
             break;
 //        case QMetaType::QRect:
