@@ -1,5 +1,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import QtQuick.Dialogs 1.0
 //import Capture 1.0
 
 Rectangle {
@@ -123,7 +124,37 @@ Rectangle {
             anchors.top: object_density_slider.bottom
             height: 40
             text: "Pause"
-            onClicked: main_window.pause_timer = !main_window.pause_timer
+            onClicked: {
+                main_window.pause_timer = !main_window.pause_timer
+                pause_time.text = "Play"
+            }
+        }
+        Button {
+            id: save
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: pause_time.bottom
+            height: 40
+            text: "Save"
+            onClicked: {
+                save_dialog.open()
+            }
+        }
+        Button {
+            id: open
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: save.bottom
+            height: 40
+            text: "Open"
+            onClicked: {
+                save_dialog.open()
+            }
+        }
+
+        FileDialog {
+            id: save_dialog
+            title: "Please choose a file"
         }
     }
 
